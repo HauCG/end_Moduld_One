@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>http://quanlisach.com</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        thead {
+            background-color: #f2f2f2;
+        }
+        #title {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h2>Thêm Sách</h2>
+<input type="text" id="bookId" placeholder="ID Sách">
+<input type="text" id="bookName" placeholder="Tên Sách">
+<input type="number" id="bookPrintYear" placeholder="Năm Xuất Bản">
+<input type="number" id="countOfBook" placeholder="Số Lượng">
+<button onclick="addBook()">Thêm Sách</button>
+
+<h2>Mượn Sách</h2>
+<input type="text" id="borrowBookName" placeholder="Nhập Tên">
+<input type="number" id="borrowCountOfBook" placeholder="Nhập số sách cần mượn">
+<button onclick="borrowBook()">Mượn Sách</button>
+<br>
+<br>
+<h1 id="title">Danh Sách</h1>
+<table id="bookTable">
+    <thead>
+    <tr>
+        <th>ID Sách</th>
+        <th>Tên Sách</th>
+        <th>Năm Xuất Bản</th>
+        <th>Số Lượng</th>
+        <th>Tình Trạng</th>
+    </tr>
+    </thead>
+    <tbody id="bookTableBody">
+    </tbody>
+</table>
+
+<script>
+    class Book {
+        constructor(bookId, bookName, bookPrintYear, countOfBook) {
+            this.bookId = bookId;
+            this.bookName = bookName;
+            this.bookPrintYear = bookPrintYear;
+            this.countOfBook = countOfBook; // Chuyển thành số nguyên
+        }
+// kiểm tra tình trạng sách
+        checkBookStatus() {
+            return this.countOfBook === 0 ? "Đã hết sách" : "Còn sách";
+        }
+// kiểm tra bookId có hợp lý ko
+        checkBookId(bookId) {
+            //check có 5 kí tự
+            if (bookId.length !== 5) {
+                return false;
+            }
+            //check có phải số ko
+            for (let i = 0; i < bookId.length; i++) {
+                if (isNaN(bookId[i])) {
+                    return false;
+                }
+            }
+            //check số đầu tiên có thỏa mãn lớn hn hoặc bằng 1 và nhỏ hơn hoặc bằng 5 ko
+            if (bookId[0] < '1' || bookId[0] > '5') {
+                return false;
+            }
+            return true;
+            // điều kiện các số còn lại 0-9 thì chả cần thay đổi vì nó là số sẵn rồi
+        }
+    }
+
+    const books = [];
+
+    function showListBook() {
+        let html = "";
+        books.forEach(book => {
+            html += `<tr>`;
+            html += `<td>${book.bookId}</td>`;
+            html += `<td>${book.bookName}</td>`;
+            html += `<td>${book.bookPrintYear}</td>`;
+            html += `<td>${book.countOfBook}</td>`;
+            html += `<td>${book.checkBookStatus()}</td>`;
+            html += `</tr>`;
+        });
+        document.getElementById("bookTableBody").innerHTML = html;
+    }
+
+    function addBook() {
+        const bookId = document.getElementById("bookId").value;
+        const bookName = document.getElementById("bookName").value;
+        const bookPrintYear = document.getElementById("bookPrintYear").value;
+        const countOfBook = document.getElementById("countOfBook").value;
+
+        if (bookId && bookName && !isNaN(bookPrintYear) && !isNaN(countOfBook)) {
+            // kiểm tra đã có  bookId && bookName và bookPrintYear, countOfBook có phải số chưa (check điền chưa luôn)
+            const newBook = new Book(bookId, bookName, bookPrintYear, countOfBook);
+            if (newBook.checkBookId(bookId)) {
+                books.push(newBook);
+                showListBook();
+                clearListBook();
+            } else {
+                alert("Vui lòng nhập ID sách hợp lệ.");
+            }
+        } else {
+            alert("Vui lòng điền đầy đủ thông tin.");
+        }
+    }
+
+    function clearListBook() {
+        document.getElementById("bookId").value = '';
+        document.getElementById("bookName").value = '';
+        document.getElementById("bookPrintYear").value = '';
+        document.getElementById("countOfBook").value = '';
+    }
+
+    // function borrowBook() {
+    //     const borrowBookName = document.getElementById("borrowBookName").value;
+    //     const borrowCountOfBook = parseInt(document.getElementById("borrowCountOfBook").value);
+    //
+    //     for (let i = 0; i < books.length; i++) {
+    //         if (books[i].bookName === borrowBookName) {
+    //             book = books[i];
+    //             break;
+    //         }
+    //     }
+    //
+    //     if (book) {
+    //         if (book.countOfBook >= borrowCountOfBook) {
+    //             book.countOfBook -= borrowCountOfBook;
+    //             alert("Mượn sách thành công!");
+    //         } else {
+    //             alert("Không đủ số sách để mượn.");
+    //         }
+    //         showListBook();
+    //     } else {
+    //         alert("Không tìm thấy sách với tên này.");
+    //     }
+    // }
+</script>
+</body>
+</html>

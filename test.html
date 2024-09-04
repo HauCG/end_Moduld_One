@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            width: 550px;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Group</th>
+        <th></th>
+    </tr>
+    <tbody id="list-student">
+
+    </tbody>
+</table>
+<script>
+
+    class Group {
+        id;
+        name;
+
+        constructor(id, name) {
+            this.id = id;
+            this.name = name;
+        }
+    }
+    class Student{
+        id;
+        name;
+        email;
+        phone;
+        group;
+
+        constructor(id, name, email, phone, group) {
+            this.id = id;
+            this.name = name;
+            this.email = email;
+            this.phone = phone;
+            this.group = group;
+        }
+
+        displayInfo(){
+            return `Name student: ${this.name} - Email: ${this.email} - Phone: ${this.phone}`;
+        }
+
+        changeName(newName){
+            this.name = newName;
+        }
+    }
+    const listStudent = [];
+
+
+    function createStudent(n){
+        for (let i = 1; i <= n; i++) {
+            let group = "C0724I!"
+            if (i % 5 === 0) {
+                group = "C0524I1"
+            }
+            const student = new Student(`SV${i}`, `Sinh vien ${i}`, `sv${i}@gmail.com`, "0989897878", group);
+            listStudent.push(student);
+        }
+    }
+
+    createStudent(10);
+
+
+    function showListStudent(){
+        let html = "";
+        listStudent.forEach((student, index) => {
+            html += `<tr>`;
+            html += `<td>${index + 1}</td>`;
+            html += `<td>${student.id}</td>`;
+            html += `<td>${student.name}</td>`;
+            html += `<td>${student.email}</td>`;
+            html += `<td>${student.phone}</td>`;
+            html += `<td>${student.group}</td>`;
+            html += `<td><button onclick="deleteStudent(${index})">Delete</button></td>`;
+            html += `</tr>`;
+            html += `</tr>`;
+        })
+
+        document.getElementById("list-student").innerHTML = html;
+    }
+
+    showListStudent();
+
+    function deleteStudent(index) {
+        listStudent.splice(index, 1);
+        showListStudent();
+    }
+
+</script>
+</body>
+</html>
